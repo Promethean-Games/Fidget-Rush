@@ -1,0 +1,1383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Fidget Rush - Keep Your Hands Busy!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Arial Black', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .screen {
+            display: none;
+            width: 100%;
+            height: 100vh;
+            padding: 20px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes bounceHorizontal {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-15px); }
+            75% { transform: translateX(15px); }
+        }
+
+        @keyframes flipHorizontal {
+            0%, 100% { transform: rotateY(0deg); }
+            50% { transform: rotateY(180deg); }
+        }
+
+        h1 {
+            font-size: clamp(2em, 8vw, 3em);
+            text-shadow: 4px 4px 0px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #FF6B6B, #FFD93D, #6BCF7F, #4ECDC4, #FF6B6B);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient 3s ease infinite, pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+            border: 4px solid white;
+            color: white;
+            font-size: clamp(1.2em, 4vw, 1.5em);
+            font-weight: bold;
+            padding: 20px 40px;
+            border-radius: 50px;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 8px 0 rgba(0,0,0,0.3);
+            transition: all 0.2s;
+            margin: 10px;
+        }
+
+        .btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 4px 0 rgba(0,0,0,0.3);
+        }
+
+        .tutorial-step-container {
+            width: 90%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .tutorial-step {
+            background: rgba(255,255,255,0.1);
+            border: 4px solid white;
+            border-radius: 20px;
+            padding: 30px 20px;
+            width: 100%;
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+
+        .tutorial-step h2 {
+            font-size: clamp(1.3em, 5vw, 2em);
+            margin: 15px 0 10px;
+        }
+
+        .tutorial-step p {
+            font-size: clamp(0.95em, 3vw, 1.2em);
+            line-height: 1.6;
+            opacity: 0.95;
+            margin: 15px 0;
+        }
+
+        .tutorial-nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 10px;
+        }
+
+        .tutorial-nav .btn {
+            font-size: clamp(0.9em, 3vw, 1.1em);
+            padding: 15px 25px;
+            margin: 5px;
+        }
+
+        .settings-menu {
+            width: 90%;
+            max-width: 500px;
+            background: rgba(255,255,255,0.1);
+            border: 4px solid white;
+            border-radius: 20px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .settings-section {
+            margin: 20px 0;
+        }
+
+        .settings-label {
+            font-size: clamp(1em, 3.5vw, 1.3em);
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .theme-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .theme-option {
+            padding: 15px;
+            border: 3px solid white;
+            border-radius: 15px;
+            cursor: pointer;
+            text-align: center;
+            font-weight: bold;
+            font-size: clamp(0.9em, 3vw, 1.1em);
+            transition: all 0.3s;
+        }
+
+        .theme-option:hover {
+            transform: scale(1.05);
+        }
+
+        .theme-option.active {
+            box-shadow: 0 0 20px rgba(255,255,255,0.5);
+            transform: scale(1.05);
+        }
+
+        .top-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .control-icon {
+            font-size: 1.8em;
+            cursor: pointer;
+            background: rgba(255,255,255,0.2);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid white;
+        }
+
+        .control-icon:active {
+            background: rgba(255,255,255,0.4);
+        }
+
+        .game-container {
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+        }
+
+        .score-display {
+            font-size: clamp(2em, 7vw, 3em);
+            font-weight: bold;
+            margin: 20px 0;
+            text-shadow: 3px 3px 0 rgba(0,0,0,0.3);
+        }
+
+        .timer-bar {
+            width: 100%;
+            height: 40px;
+            background: rgba(255,255,255,0.3);
+            border: 4px solid white;
+            border-radius: 20px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .timer-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #6BCF7F, #FFD93D, #FF6B6B);
+            transition: width 0.1s linear;
+            border-radius: 15px;
+        }
+
+        .action-display {
+            background: #667eea;
+            border: 5px solid white;
+            border-radius: 25px;
+            padding: 30px 20px;
+            margin: 30px 0;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 0 rgba(0,0,0,0.2);
+            transition: background 0.3s ease;
+        }
+
+        .action-icon {
+            font-size: clamp(5em, 20vw, 8em);
+            margin: 15px 0;
+        }
+
+        .action-icon.shake-animation {
+            animation: bounceHorizontal 0.8s infinite;
+        }
+
+        .action-icon.spin-animation {
+            animation: flipHorizontal 1.5s infinite;
+        }
+
+        .action-icon.default-animation {
+            animation: bounce 1s infinite;
+        }
+
+        .action-icon.pulse {
+            animation: pulse 1.5s infinite;
+        }
+
+        .action-text {
+            font-size: clamp(2em, 8vw, 3.5em);
+            font-weight: bold;
+            text-shadow: 3px 3px 0 rgba(0,0,0,0.3);
+            text-align: center;
+            word-wrap: break-word;
+        }
+
+        .game-over-screen {
+            text-align: center;
+            padding: 5px;
+            max-height: 100vh;
+            overflow-y: auto;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .game-over-title {
+            font-size: clamp(1.8em, 7vw, 3em);
+            font-weight: bold;
+            margin: 5px 0 3px 0;
+            text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+            background: linear-gradient(45deg, #FF6B6B, #FFD93D);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient 2s ease infinite;
+        }
+
+        .summary-header {
+            font-size: clamp(1em, 3.5vw, 1.5em);
+            font-weight: bold;
+            margin: 3px 0;
+            text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+        }
+
+        .summary-stats {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid white;
+            border-radius: 10px;
+            padding: clamp(5px, 2vw, 8px);
+            margin: 3px auto;
+            backdrop-filter: blur(10px);
+            max-width: 95%;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .stat-row {
+            background: linear-gradient(135deg, #4ECDC4, #556ECF);
+            border: 2px solid white;
+            border-radius: 8px;
+            padding: clamp(5px, 1.5vw, 8px);
+            margin: 3px 0;
+            font-size: clamp(0.7em, 2.5vw, 0.9em);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 5px;
+            flex-wrap: wrap;
+            word-break: break-word;
+            box-sizing: border-box;
+        }
+        
+        .stat-row span {
+            flex-shrink: 1;
+            min-width: 0;
+        }
+
+        .highscore-list {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid white;
+            border-radius: 10px;
+            padding: clamp(5px, 2vw, 8px);
+            margin: 3px auto;
+            backdrop-filter: blur(10px);
+            max-width: 95%;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .highscore-list h2 {
+            font-size: clamp(1em, 3.5vw, 1.4em);
+            margin: 3px 0 5px 0;
+        }
+
+        .highscore-item {
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+            border: 2px solid white;
+            border-radius: 8px;
+            padding: clamp(5px, 1.5vw, 7px) clamp(8px, 2vw, 10px);
+            margin: 3px 0;
+            font-size: clamp(0.7em, 2.5vw, 0.9em);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            box-sizing: border-box;
+        }
+
+        .highscore-item.first {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            font-size: clamp(0.75em, 2.8vw, 1em);
+            animation: pulse 2s infinite;
+        }
+
+        .initials-input {
+            font-size: clamp(1em, 3.5vw, 1.3em);
+            padding: 8px;
+            border: 2px solid white;
+            border-radius: 10px;
+            text-align: center;
+            text-transform: uppercase;
+            max-width: 120px;
+            margin: 5px auto;
+            font-weight: bold;
+            background: rgba(255,255,255,0.9);
+            color: #667eea;
+        }
+
+        #newHighScoreSection h2 {
+            font-size: clamp(1em, 3.5vw, 1.4em);
+            margin: 5px 0;
+        }
+
+        .share-btn {
+            background: linear-gradient(135deg, #6BCF7F, #4ECDC4);
+            border: 2px solid white;
+            color: white;
+            font-size: clamp(0.8em, 3vw, 1em);
+            font-weight: bold;
+            padding: 8px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin: 4px 3px;
+            box-shadow: 0 3px 0 rgba(0,0,0,0.3);
+        }
+
+        .countdown {
+            font-size: clamp(4em, 15vw, 5em);
+            font-weight: bold;
+            animation: pulse 0.5s ease-in-out;
+        }
+
+        .success-feedback {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 5em;
+            animation: successPop 0.5s ease-out;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        @keyframes successPop {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+            50% { transform: translate(-50%, -50%) scale(1.2); }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+        }
+
+        .subtitle {
+            font-size: clamp(1em, 3vw, 1.2em);
+            margin: 10px 0;
+            opacity: 0.9;
+        }
+
+        .swipe-hint {
+            font-size: clamp(0.8em, 2.5vw, 0.9em);
+            opacity: 0.7;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="welcomeScreen" class="screen active">
+        <h1>FIDGET RUSH</h1>
+        <p class="subtitle">Keep Your Hands Busy!</p>
+        <button class="btn" onclick="handleStartButton()">START</button>
+        <div style="margin-top: 15px; opacity: 0.7; font-size: clamp(0.85em, 2.5vw, 1em);">
+            <a href="#" onclick="event.preventDefault(); showTutorial();" style="color: white; text-decoration: underline;">How to Play</a>
+        </div>
+    </div>
+
+    <div id="tutorialScreen" class="screen">
+        <h1>LEARN THE MOVES</h1>
+        <div class="tutorial-step-container">
+            <div class="tutorial-step" id="tutorialStep">
+                <div class="action-icon" id="tutorialIcon">🎮</div>
+                <h2 id="tutorialGestureName">GESTURE NAME</h2>
+                <p id="tutorialDescription">Description goes here</p>
+                <div id="tutorialStatus" style="font-size: clamp(1.5em, 5vw, 2em); margin: 20px 0;">⏸️</div>
+            </div>
+            <div class="tutorial-nav">
+                <button class="btn" id="prevBtn" onclick="previousTutorialStep()" style="opacity: 0.6;">◄ BACK</button>
+                <div style="margin: 0 15px; font-size: clamp(0.9em, 3vw, 1.1em); opacity: 0.8;">
+                    <span id="tutorialProgress">1/5</span>
+                </div>
+                <button class="btn" id="nextBtn" onclick="nextTutorialStep()">NEXT ►</button>
+            </div>
+        </div>
+        <button class="btn" id="finishTutorialBtn" onclick="completeTutorial()" style="margin-top: 20px; display: none;">START PLAYING!</button>
+    </div>
+
+    <div id="settingsScreen" class="screen">
+        <h1>SETTINGS</h1>
+        <div class="settings-menu">
+            <div class="settings-section">
+                <div class="settings-label">🎨 Choose Theme</div>
+                <div class="theme-grid" id="themeGrid"></div>
+            </div>
+            <div class="settings-section">
+                <div class="settings-label">📚 Tutorial</div>
+                <button class="btn" onclick="showTutorial()">VIEW TUTORIAL</button>
+            </div>
+        </div>
+        <button class="btn" onclick="closeSettings()">BACK</button>
+    </div>
+
+    <div id="gameScreen" class="screen">
+        <div class="top-controls">
+            <div class="control-icon" id="pausePlayBtn" onclick="togglePause()">⏸️</div>
+            <div class="control-icon" onclick="openSettings()">⚙️</div>
+        </div>
+        <div class="game-container">
+            <div class="score-display">SCORE: <span id="currentScore">0</span></div>
+            <div class="timer-bar">
+                <div class="timer-fill" id="timerFill"></div>
+            </div>
+            <div class="action-display">
+                <div class="action-icon" id="actionIcon">🎮</div>
+                <div class="action-text" id="actionText">GET READY!</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="summaryScreen" class="screen">
+        <div class="game-over-screen">
+            <div class="game-over-title">GAME OVER</div>
+            <div class="summary-header">GAME SUMMARY</div>
+            <div class="summary-stats" id="summaryStats">
+                <div class="stat-row">
+                    <span>FINAL SCORE:</span>
+                    <span id="finalScore">0</span>
+                </div>
+                <div class="stat-row">
+                    <span>FASTEST MOVE:</span>
+                    <span id="fastestMove">-</span>
+                </div>
+                <div class="stat-row">
+                    <span>SLOWEST MOVE:</span>
+                    <span id="slowestMove">-</span>
+                </div>
+            </div>
+            <div id="newHighScoreSection" style="display: none;">
+                <h2 style="color: #FFD700; text-shadow: 2px 2px 0 rgba(0,0,0,0.3);">NEW HIGH SCORE!</h2>
+                <input type="text" id="initialsInput" class="initials-input" maxlength="3" placeholder="AAA">
+                <button class="btn" onclick="saveHighScore()">SAVE</button>
+            </div>
+            <div class="highscore-list" id="highScoreList">
+                <h2>HIGH SCORES</h2>
+            </div>
+            <button class="share-btn" onclick="shareScore()">📱 SHARE SCORE</button>
+            <button class="btn" onclick="restartGame()">PLAY AGAIN</button>
+        </div>
+    </div>
+
+    <script>
+        let score = 0;
+        let currentGesture = null;
+        let gameActive = false;
+        let gamePaused = false;
+        let tutorialMode = false;
+        let currentTutorialStep = 0;
+        let timeLimit = 3000;
+        let timerInterval = null;
+        let moveTimes = [];
+        let moveHistory = [];
+        let moveStartTime = 0;
+        let currentTheme = 'default';
+        let returnScreen = 'welcomeScreen';
+
+        const themes = {
+            default: {
+                name: 'Default',
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                color: 'white'
+            },
+            dark: {
+                name: 'Dark',
+                background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
+                color: 'white'
+            },
+            sunset: {
+                name: 'Sunset',
+                background: 'linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 50%, #c44569 100%)',
+                color: 'white'
+            },
+            ocean: {
+                name: 'Ocean',
+                background: 'linear-gradient(135deg, #0093e9 0%, #80d0c7 100%)',
+                color: 'white'
+            },
+            forest: {
+                name: 'Forest',
+                background: 'linear-gradient(135deg, #134e5e 0%, #71b280 100%)',
+                color: 'white'
+            },
+            neon: {
+                name: 'Neon',
+                background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+                color: 'white'
+            }
+        };
+
+        const gestures = [
+            { name: 'STRIKE A POSE', icon: '🤳', type: 'tilt', description: 'Lift phone up and tilt down like taking a selfie', color: '#9333ea' },
+            { name: 'SHAKE IT', icon: '📳', type: 'shake', description: 'Shake your phone vigorously left and right like a foam finger', color: '#dc2626' },
+            { name: 'SPIN IT', icon: '🚁', type: 'spin', description: 'Rotate your phone 90° like spinning helicopter blades', color: '#0891b2' },
+            { name: 'GO FISH', icon: '🎣', type: 'fish', description: 'Hold phone sideways and flick forward like casting a fishing rod', color: '#16a34a' },
+            { name: 'WAVE IT', icon: '👋', type: 'wave', description: 'Wave your phone side-to-side like saying goodbye', color: '#ea580c' }
+        ];
+
+        let motionData = {
+            lastAccX: 0,
+            lastAccY: 0,
+            lastAccZ: 0,
+            lastShakeDirection: 0,
+            shakeDirectionChanges: 0,
+            rotation: 0,
+            lastRotation: 0,
+            lastGamma: 0,
+            waveOscillations: 0,
+            lastWaveDirection: 0,
+            tiltThreshold: 15,
+            rotationThreshold: 90,
+            tapThreshold: 40,
+            waveOscillationsNeeded: 3,
+            tiltStartTime: 0,
+            tiltHoldDuration: 100,
+            lastTapTrigger: 0,
+            tapDebounce: 300,
+            lastLiftTime: 0,
+            lastTiltTime: 0,
+            liftThreshold: 9,
+            selfieWindow: 800,
+            fishCastStartTime: 0,
+            fishPeakX: 0,
+            fishCastThreshold: 7,
+            fishStopWindow: 200,
+            awaitingFishStop: false,
+            isPhonePerpendicular: false,
+            lastFishAccX: 0,
+            spinStartTime: 0,
+            spinPeakAcceleration: 0,
+            spinAccelerationThreshold: 15,
+            spinMinTime: 300,
+            spinMaxTime: 3000,
+            spinDirection: 0,
+            spinDirectionChanges: 0,
+            spinMaxDirectionChanges: 2,
+            spinAttemptActive: false
+        };
+
+        let gestureCompleted = new Array(gestures.length).fill(false);
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function loadTheme() {
+            const saved = localStorage.getItem('fidgetRushTheme');
+            if (saved && themes[saved]) {
+                currentTheme = saved;
+            }
+            applyTheme(currentTheme);
+        }
+
+        function applyTheme(themeId) {
+            const theme = themes[themeId];
+            document.body.style.background = theme.background;
+            document.body.style.color = theme.color;
+            currentTheme = themeId;
+            localStorage.setItem('fidgetRushTheme', themeId);
+        }
+
+        function buildThemeGrid() {
+            const grid = document.getElementById('themeGrid');
+            grid.innerHTML = '';
+            
+            Object.keys(themes).forEach(themeId => {
+                const theme = themes[themeId];
+                const option = document.createElement('div');
+                option.className = 'theme-option' + (themeId === currentTheme ? ' active' : '');
+                option.style.background = theme.background;
+                option.textContent = theme.name;
+                option.onclick = () => {
+                    applyTheme(themeId);
+                    buildThemeGrid();
+                };
+                grid.appendChild(option);
+            });
+        }
+
+        function handleStartButton() {
+            const tutorialCompleted = localStorage.getItem('fidgetRushTutorialCompleted') === 'true';
+            if (tutorialCompleted) {
+                startGame();
+            } else {
+                showTutorial();
+            }
+        }
+
+        function showTutorial() {
+            gestureCompleted = new Array(gestures.length).fill(false);
+            currentTutorialStep = 0;
+            showScreen('tutorialScreen');
+            updateTutorialStep();
+            requestDevicePermissions(true);
+        }
+
+        function updateTutorialStep() {
+            const gesture = gestures[currentTutorialStep];
+            document.getElementById('tutorialIcon').textContent = gesture.icon;
+            document.getElementById('tutorialGestureName').textContent = gesture.name;
+            document.getElementById('tutorialDescription').textContent = gesture.description;
+            document.getElementById('tutorialStatus').textContent = gestureCompleted[currentTutorialStep] ? '✅' : '⏸️';
+            document.getElementById('tutorialProgress').textContent = `${currentTutorialStep + 1}/${gestures.length}`;
+            
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const finishBtn = document.getElementById('finishTutorialBtn');
+            
+            prevBtn.style.opacity = currentTutorialStep === 0 ? '0.4' : '0.6';
+            prevBtn.disabled = currentTutorialStep === 0;
+            
+            if (currentTutorialStep === gestures.length - 1) {
+                nextBtn.style.display = 'none';
+                finishBtn.style.display = 'inline-block';
+            } else {
+                nextBtn.style.display = 'inline-block';
+                finishBtn.style.display = 'none';
+            }
+        }
+
+        function previousTutorialStep() {
+            if (currentTutorialStep > 0) {
+                currentTutorialStep--;
+                updateTutorialStep();
+            }
+        }
+
+        function nextTutorialStep() {
+            if (currentTutorialStep < gestures.length - 1) {
+                currentTutorialStep++;
+                updateTutorialStep();
+            }
+        }
+
+        function updateGestureStatus(index, message) {
+            if (index === currentTutorialStep) {
+                document.getElementById('tutorialStatus').textContent = message;
+            }
+        }
+
+        function openSettings() {
+            returnScreen = document.querySelector('.screen.active').id;
+            gameActive = false;
+            gamePaused = false;
+            clearInterval(timerInterval);
+            buildThemeGrid();
+            showScreen('settingsScreen');
+        }
+
+        function closeSettings() {
+            showScreen(returnScreen);
+            if (returnScreen === 'gameScreen' && !tutorialMode) {
+                gamePaused = false;
+                startTimer();
+            }
+        }
+
+        function resetSpinState() {
+            motionData.rotation = 0;
+            motionData.spinStartTime = 0;
+            motionData.spinPeakAcceleration = 0;
+            motionData.spinDirection = 0;
+            motionData.spinDirectionChanges = 0;
+            motionData.spinAttemptActive = false;
+        }
+
+        function resetGestureTracking() {
+            motionData.rotation = 0;
+            motionData.waveOscillations = 0;
+            motionData.lastWaveDirection = 0;
+            motionData.shakeDirectionChanges = 0;
+            motionData.lastShakeDirection = 0;
+            motionData.tiltStartTime = 0;
+            motionData.lastLiftTime = 0;
+            motionData.lastTiltTime = 0;
+            motionData.fishCastStartTime = 0;
+            motionData.fishPeakX = 0;
+            motionData.awaitingFishStop = false;
+            motionData.lastFishAccX = 0;
+            resetSpinState();
+        }
+
+        function completeTutorial() {
+            tutorialMode = false;
+            removeSensors();
+            localStorage.setItem('fidgetRushTutorialCompleted', 'true');
+            startGame();
+        }
+
+        function togglePause() {
+            if (!gameActive) return;
+            
+            gamePaused = !gamePaused;
+            const btn = document.getElementById('pausePlayBtn');
+            btn.textContent = gamePaused ? '▶️' : '⏸️';
+            
+            if (gamePaused) {
+                clearInterval(timerInterval);
+            } else {
+                startTimer();
+            }
+        }
+
+        function startGame() {
+            score = 0;
+            moveTimes = [];
+            moveHistory = [];
+            timeLimit = 3000;
+            gameActive = false;
+            gamePaused = false;
+            tutorialMode = false;
+            
+            showScreen('gameScreen');
+            document.getElementById('currentScore').textContent = score;
+            document.getElementById('pausePlayBtn').textContent = '⏸️';
+            
+            requestDevicePermissions(false);
+        }
+
+        async function requestDevicePermissions(isTutorial) {
+            let motionGranted = true;
+            let orientationGranted = true;
+
+            if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
+                try {
+                    const motionPermission = await DeviceMotionEvent.requestPermission();
+                    motionGranted = motionPermission === 'granted';
+                } catch (error) {
+                    console.error('Motion permission error:', error);
+                }
+            }
+
+            if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+                try {
+                    const orientationPermission = await DeviceOrientationEvent.requestPermission();
+                    orientationGranted = orientationPermission === 'granted';
+                } catch (error) {
+                    console.error('Orientation permission error:', error);
+                }
+            }
+
+            if (!motionGranted || !orientationGranted) {
+                const deniedSensors = [];
+                if (!motionGranted) deniedSensors.push('motion');
+                if (!orientationGranted) deniedSensors.push('orientation');
+                
+                alert(`Please enable ${deniedSensors.join(' and ')} sensors in your device settings to play Fidget Rush!\n\nOn iOS: Settings > Safari > Motion & Orientation Access`);
+                showScreen('welcomeScreen');
+                return;
+            }
+
+            initializeSensors();
+            
+            if (isTutorial) {
+                tutorialMode = true;
+            } else {
+                showReadyPrompt();
+            }
+        }
+
+        function showReadyPrompt() {
+            const actionIcon = document.getElementById('actionIcon');
+            const actionText = document.getElementById('actionText');
+            const actionDisplay = document.querySelector('.action-display');
+            
+            actionIcon.style.display = 'block';
+            actionIcon.textContent = '👋';
+            actionIcon.className = 'action-icon pulse';
+            actionText.innerHTML = '<div style="cursor: pointer;">READY?</div><div style="margin-top: 10px; font-size: 0.7em; opacity: 0.7;"><a href="#" onclick="event.preventDefault(); showTutorial(); return false;" style="color: white; text-decoration: underline;">Tutorial</a></div>';
+            actionDisplay.style.background = '#667eea';
+            
+            const startCountdownOnTap = () => {
+                actionDisplay.removeEventListener('click', startCountdownOnTap);
+                countdown();
+            };
+            
+            actionDisplay.addEventListener('click', startCountdownOnTap);
+        }
+
+        function initializeSensors() {
+            window.addEventListener('devicemotion', handleMotion);
+            window.addEventListener('deviceorientation', handleOrientation);
+        }
+
+        function removeSensors() {
+            window.removeEventListener('devicemotion', handleMotion);
+            window.removeEventListener('deviceorientation', handleOrientation);
+        }
+
+        function handleMotion(event) {
+            if (gamePaused) return;
+            
+            const acc = event.accelerationIncludingGravity;
+            if (!acc) return;
+
+            const accX = acc.x || 0;
+            const accY = acc.y || 0;
+            const accZ = acc.z || 0;
+
+            if (Math.abs(accX) > 5) {
+                const currentDirection = accX > 0 ? 1 : -1;
+                if (motionData.lastShakeDirection !== 0 && currentDirection !== motionData.lastShakeDirection) {
+                    motionData.shakeDirectionChanges++;
+                }
+                motionData.lastShakeDirection = currentDirection;
+            }
+
+            motionData.lastAccX = accX;
+            motionData.lastAccY = accY;
+            motionData.lastAccZ = accZ;
+
+            const gravityFreeAcc = event.acceleration;
+            const totalAcc = gravityFreeAcc 
+                ? Math.abs(gravityFreeAcc.x || 0) + Math.abs(gravityFreeAcc.y || 0) + Math.abs(gravityFreeAcc.z || 0)
+                : Math.abs(accX) + Math.abs(accY) + Math.abs(accZ);
+
+            const now = Date.now();
+            
+            if ((tutorialMode || (gameActive && currentGesture && currentGesture.type === 'spin')) && motionData.spinAttemptActive) {
+                if (totalAcc > motionData.spinPeakAcceleration) {
+                    motionData.spinPeakAcceleration = totalAcc;
+                }
+                
+                if (motionData.spinPeakAcceleration > motionData.spinAccelerationThreshold) {
+                    resetSpinState();
+                }
+            }
+            const canTriggerTap = (now - motionData.lastTapTrigger) > motionData.tapDebounce;
+
+            if ((tutorialMode || (gameActive && currentGesture && currentGesture.type === 'tilt'))) {
+                if (accY < -motionData.liftThreshold) {
+                    motionData.lastLiftTime = now;
+                    
+                    const timeSinceTilt = now - motionData.lastTiltTime;
+                    const hasBothGestures = motionData.lastTiltTime > 0 && timeSinceTilt <= motionData.selfieWindow;
+                    
+                    if (hasBothGestures) {
+                        if (tutorialMode) {
+                            motionData.tiltStartTime = 0;
+                            motionData.lastLiftTime = 0;
+                            motionData.lastTiltTime = 0;
+                            handleTutorialSuccess('tilt');
+                        } else if (gameActive && currentGesture && currentGesture.type === 'tilt') {
+                            motionData.tiltStartTime = 0;
+                            motionData.lastLiftTime = 0;
+                            motionData.lastTiltTime = 0;
+                            completeGesture();
+                        }
+                    }
+                }
+            }
+
+            if ((tutorialMode || (gameActive && currentGesture && currentGesture.type === 'fish'))) {
+                if (motionData.lastFishAccX === 0) {
+                    motionData.lastFishAccX = accX;
+                }
+                
+                const xAccDiff = accX - motionData.lastFishAccX;
+                motionData.lastFishAccX = accX;
+                
+                if (!motionData.awaitingFishStop && Math.abs(xAccDiff) > motionData.fishCastThreshold && motionData.isPhonePerpendicular) {
+                    motionData.awaitingFishStop = true;
+                    motionData.fishCastStartTime = now;
+                    motionData.fishPeakX = xAccDiff;
+                } else if (motionData.awaitingFishStop) {
+                    const elapsed = now - motionData.fishCastStartTime;
+                    const hasStopped = Math.abs(xAccDiff) < 1.5 || (Math.sign(xAccDiff) !== Math.sign(motionData.fishPeakX) && Math.abs(xAccDiff) > 2);
+                    
+                    if (elapsed > motionData.fishStopWindow) {
+                        motionData.awaitingFishStop = false;
+                        motionData.fishCastStartTime = 0;
+                        motionData.fishPeakX = 0;
+                        motionData.lastFishAccX = accX;
+                    } else if (hasStopped && elapsed > 50) {
+                        if (tutorialMode) {
+                            motionData.awaitingFishStop = false;
+                            motionData.fishCastStartTime = 0;
+                            motionData.fishPeakX = 0;
+                            motionData.lastFishAccX = accX;
+                            handleTutorialSuccess('fish');
+                        } else if (gameActive && currentGesture && currentGesture.type === 'fish') {
+                            motionData.awaitingFishStop = false;
+                            motionData.fishCastStartTime = 0;
+                            motionData.fishPeakX = 0;
+                            motionData.lastFishAccX = accX;
+                            completeGesture();
+                        }
+                    }
+                }
+            }
+
+            if (tutorialMode) {
+                if (motionData.shakeDirectionChanges >= 3) {
+                    handleTutorialSuccess('shake');
+                }
+            } else if (gameActive) {
+                if (currentGesture && currentGesture.type === 'shake' && motionData.shakeDirectionChanges >= 3) {
+                    completeGesture();
+                }
+            }
+        }
+
+        function handleOrientation(event) {
+            if (gamePaused) return;
+            
+            const beta = event.beta;
+            const gamma = event.gamma;
+            const alpha = event.alpha;
+
+            if (beta !== null && gamma !== null) {
+                const isPortrait = Math.abs(gamma) < 45;
+                const portraitBaseline = -90;
+                const tiltFromBaseline = beta - portraitBaseline;
+                const now = Date.now();
+                
+                motionData.isPhonePerpendicular = Math.abs(Math.abs(gamma) - 90) < 30;
+
+                const isTilted = isPortrait && tiltFromBaseline > motionData.tiltThreshold;
+
+                if (isTilted && (tutorialMode || (gameActive && currentGesture && currentGesture.type === 'tilt'))) {
+                    if (motionData.tiltStartTime === 0) {
+                        motionData.tiltStartTime = now;
+                    }
+                    const heldDuration = now - motionData.tiltStartTime;
+
+                    if (heldDuration >= motionData.tiltHoldDuration) {
+                        motionData.lastTiltTime = now;
+                        
+                        const timeSinceLift = now - motionData.lastLiftTime;
+                        const hasBothGestures = motionData.lastLiftTime > 0 && timeSinceLift <= motionData.selfieWindow;
+                        
+                        if (hasBothGestures) {
+                            if (tutorialMode) {
+                                motionData.tiltStartTime = 0;
+                                motionData.lastLiftTime = 0;
+                                motionData.lastTiltTime = 0;
+                                handleTutorialSuccess('tilt');
+                            } else if (gameActive && currentGesture && currentGesture.type === 'tilt') {
+                                motionData.tiltStartTime = 0;
+                                motionData.lastLiftTime = 0;
+                                motionData.lastTiltTime = 0;
+                                completeGesture();
+                            }
+                        }
+                    }
+                } else {
+                    motionData.tiltStartTime = 0;
+                    if (tutorialMode || (gameActive && currentGesture && currentGesture.type === 'tilt')) {
+                        motionData.lastTiltTime = 0;
+                    }
+                }
+            }
+
+            if (gamma !== null) {
+                const gammaDelta = gamma - motionData.lastGamma;
+                
+                if (Math.abs(gammaDelta) > 20) {
+                    const currentDirection = gammaDelta > 0 ? 1 : -1;
+                    if (motionData.lastWaveDirection !== 0 && currentDirection !== motionData.lastWaveDirection) {
+                        motionData.waveOscillations++;
+                    }
+                    motionData.lastWaveDirection = currentDirection;
+                }
+                motionData.lastGamma = gamma;
+
+                if (tutorialMode) {
+                    if (motionData.waveOscillations >= motionData.waveOscillationsNeeded) {
+                        handleTutorialSuccess('wave');
+                    }
+                } else if (gameActive) {
+                    if (currentGesture && currentGesture.type === 'wave' && motionData.waveOscillations >= motionData.waveOscillationsNeeded) {
+                        completeGesture();
+                    }
+                }
+            }
+
+            if (alpha !== null) {
+                const now = Date.now();
+                const signedDelta = alpha - motionData.lastRotation;
+                let normalizedDelta = signedDelta;
+                if (signedDelta > 180) {
+                    normalizedDelta = signedDelta - 360;
+                } else if (signedDelta < -180) {
+                    normalizedDelta = signedDelta + 360;
+                }
+                
+                const rotationDelta = Math.abs(normalizedDelta);
+                
+                if ((tutorialMode || (gameActive && currentGesture && currentGesture.type === 'spin'))) {
+                    if (rotationDelta > 2) {
+                        if (!motionData.spinAttemptActive) {
+                            motionData.spinAttemptActive = true;
+                            motionData.spinStartTime = now;
+                            motionData.spinPeakAcceleration = 0;
+                        }
+                        
+                        const currentDirection = normalizedDelta > 0 ? 1 : -1;
+                        if (motionData.spinDirection !== 0 && currentDirection !== motionData.spinDirection) {
+                            motionData.spinDirectionChanges++;
+                            if (motionData.spinDirectionChanges > motionData.spinMaxDirectionChanges) {
+                                resetSpinState();
+                                motionData.lastRotation = alpha;
+                                return;
+                            }
+                        }
+                        motionData.spinDirection = currentDirection;
+                        motionData.rotation += rotationDelta;
+                    }
+                    motionData.lastRotation = alpha;
+                    
+                    if (motionData.rotation >= motionData.rotationThreshold && motionData.spinAttemptActive) {
+                        const spinDuration = now - motionData.spinStartTime;
+                        
+                        if (spinDuration >= motionData.spinMinTime && 
+                            spinDuration <= motionData.spinMaxTime && 
+                            motionData.spinPeakAcceleration <= motionData.spinAccelerationThreshold) {
+                            
+                            if (tutorialMode) {
+                                resetSpinState();
+                                handleTutorialSuccess('spin');
+                            } else if (gameActive && currentGesture.type === 'spin') {
+                                resetSpinState();
+                                completeGesture();
+                            }
+                        } else {
+                            resetSpinState();
+                        }
+                    }
+                } else {
+                    motionData.rotation += rotationDelta;
+                    motionData.lastRotation = alpha;
+                }
+            }
+        }
+
+        function handleTutorialSuccess(gestureType) {
+            const gestureIndex = gestures.findIndex(g => g.type === gestureType);
+            if (gestureIndex === -1 || gestureCompleted[gestureIndex]) return;
+            
+            gestureCompleted[gestureIndex] = true;
+            updateGestureStatus(gestureIndex, '✅');
+            showSuccessFeedback();
+            resetGestureTracking();
+            
+            if (gestureIndex === currentTutorialStep && currentTutorialStep < gestures.length - 1) {
+                setTimeout(() => {
+                    currentTutorialStep++;
+                    updateTutorialStep();
+                }, 1000);
+            }
+        }
+
+        function countdown() {
+            let count = 3;
+            const actionIcon = document.getElementById('actionIcon');
+            const actionText = document.getElementById('actionText');
+            
+            actionIcon.style.display = 'none';
+            actionText.innerHTML = `<div class="countdown">${count}</div>`;
+            
+            const countInterval = setInterval(() => {
+                count--;
+                if (count > 0) {
+                    actionText.innerHTML = `<div class="countdown">${count}</div>`;
+                } else {
+                    clearInterval(countInterval);
+                    actionIcon.style.display = 'block';
+                    nextGesture();
+                }
+            }, 1000);
+        }
+
+        function nextGesture() {
+            gameActive = true;
+            currentGesture = gestures[Math.floor(Math.random() * gestures.length)];
+            motionData.rotation = 0;
+            motionData.waveOscillations = 0;
+            motionData.lastWaveDirection = 0;
+            motionData.shakeDirectionChanges = 0;
+            resetSpinState();
+            moveStartTime = Date.now();
+            
+            const actionIcon = document.getElementById('actionIcon');
+            const actionText = document.getElementById('actionText');
+            const actionDisplay = document.querySelector('.action-display');
+            
+            actionText.textContent = currentGesture.name;
+            actionIcon.textContent = currentGesture.icon;
+            actionDisplay.style.background = currentGesture.color;
+            
+            actionIcon.className = 'action-icon';
+            if (currentGesture.type === 'shake') {
+                actionIcon.classList.add('shake-animation');
+            } else if (currentGesture.type === 'spin') {
+                actionIcon.classList.add('spin-animation');
+            } else {
+                actionIcon.classList.add('default-animation');
+            }
+            
+            startTimer();
+        }
+
+        function startTimer() {
+            if (gamePaused) return;
+            
+            const timerFill = document.getElementById('timerFill');
+            const startWidth = 100;
+            let currentWidth = startWidth;
+            const decreaseRate = 100 / (timeLimit / 50);
+            
+            timerFill.style.width = '100%';
+            
+            if (timerInterval) clearInterval(timerInterval);
+            
+            timerInterval = setInterval(() => {
+                if (gamePaused) return;
+                
+                currentWidth -= decreaseRate;
+                timerFill.style.width = currentWidth + '%';
+                
+                if (currentWidth <= 0) {
+                    clearInterval(timerInterval);
+                    gameOver();
+                }
+            }, 50);
+        }
+
+        function completeGesture() {
+            if (!gameActive || gamePaused) return;
+            
+            gameActive = false;
+            clearInterval(timerInterval);
+            
+            const moveTime = Date.now() - moveStartTime;
+            moveTimes.push(moveTime);
+            moveHistory.push({ name: currentGesture.name, time: moveTime });
+            
+            score++;
+            document.getElementById('currentScore').textContent = score;
+            
+            showSuccessFeedback();
+            
+            timeLimit = Math.max(800, timeLimit - 150);
+            
+            setTimeout(() => {
+                nextGesture();
+            }, 300);
+        }
+
+        function showSuccessFeedback() {
+            const feedback = document.createElement('div');
+            feedback.className = 'success-feedback';
+            feedback.textContent = '✓';
+            feedback.style.color = '#6BCF7F';
+            document.body.appendChild(feedback);
+            
+            setTimeout(() => {
+                document.body.removeChild(feedback);
+            }, 500);
+        }
+
+        function gameOver() {
+            gameActive = false;
+            gamePaused = false;
+            clearInterval(timerInterval);
+            
+            document.getElementById('finalScore').textContent = score;
+            
+            if (moveHistory.length > 0) {
+                const fastestMove = moveHistory.reduce((prev, curr) => prev.time < curr.time ? prev : curr);
+                const slowestMove = moveHistory.reduce((prev, curr) => prev.time > curr.time ? prev : curr);
+                document.getElementById('fastestMove').textContent = `${fastestMove.name} - ${(fastestMove.time / 1000).toFixed(2)}s`;
+                document.getElementById('slowestMove').textContent = `${slowestMove.name} - ${(slowestMove.time / 1000).toFixed(2)}s`;
+            } else {
+                document.getElementById('fastestMove').textContent = '-';
+                document.getElementById('slowestMove').textContent = '-';
+            }
+            
+            checkHighScore();
+            displayHighScores();
+            showScreen('summaryScreen');
+        }
+
+        function checkHighScore() {
+            const highScores = getHighScores();
+            const isHighScore = highScores.length < 5 || score > highScores[highScores.length - 1].score;
+            
+            if (isHighScore) {
+                document.getElementById('newHighScoreSection').style.display = 'block';
+                document.getElementById('initialsInput').value = '';
+                document.getElementById('initialsInput').focus();
+            } else {
+                document.getElementById('newHighScoreSection').style.display = 'none';
+            }
+        }
+
+        function getHighScores() {
+            const stored = localStorage.getItem('fidgetRushHighScores');
+            return stored ? JSON.parse(stored) : [];
+        }
+
+        function saveHighScore() {
+            const initials = document.getElementById('initialsInput').value.toUpperCase().trim();
+            if (initials.length !== 3) {
+                alert('Please enter exactly 3 letters for your initials!');
+                return;
+            }
+            
+            let highScores = getHighScores();
+            highScores.push({ initials, score });
+            highScores.sort((a, b) => b.score - a.score);
+            highScores = highScores.slice(0, 5);
+            
+            localStorage.setItem('fidgetRushHighScores', JSON.stringify(highScores));
+            
+            document.getElementById('newHighScoreSection').style.display = 'none';
+            displayHighScores();
+        }
+
+        function displayHighScores() {
+            const highScores = getHighScores();
+            const listContainer = document.getElementById('highScoreList');
+            
+            listContainer.innerHTML = '<h2>HIGH SCORES</h2>';
+            
+            if (highScores.length === 0) {
+                listContainer.innerHTML += '<p style="opacity: 0.7; margin: 20px;">No high scores yet!</p>';
+                return;
+            }
+            
+            highScores.forEach((hs, index) => {
+                const item = document.createElement('div');
+                item.className = 'highscore-item' + (index === 0 ? ' first' : '');
+                item.innerHTML = `<span>${index + 1}. ${hs.initials}</span><span>${hs.score}</span>`;
+                listContainer.appendChild(item);
+            });
+        }
+
+        function shareScore() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Fidget Rush Score',
+                    text: `I scored ${score} points in Fidget Rush! Can you beat it?`,
+                    url: window.location.href
+                }).catch(err => console.log('Share cancelled'));
+            } else {
+                alert('📱 Take a screenshot of this page to share your score on social media!');
+            }
+        }
+
+        function restartGame() {
+            showScreen('welcomeScreen');
+        }
+
+        loadTheme();
+        displayHighScores();
+
+        window.addEventListener('beforeunload', () => {
+            removeSensors();
+        });
+    </script>
+
+</body>
+</html>
