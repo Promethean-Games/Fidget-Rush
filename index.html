@@ -15,7 +15,7 @@
 
         body {
             font-family: 'Arial Black', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: radial-gradient(circle at top, #1e293b 0%, #020617 45%, #000000 100%);
             color: white;
             overflow: hidden;
             height: 100vh;
@@ -67,7 +67,7 @@
 
         h1 {
             font-size: clamp(2em, 8vw, 3em);
-            text-shadow: 4px 4px 0px rgba(0,0,0,0.3);
+            text-shadow: 4px 4px 0px rgba(0,0,0,0.6);
             margin-bottom: 20px;
             background: linear-gradient(45deg, #FF6B6B, #FFD93D, #6BCF7F, #4ECDC4, #FF6B6B);
             background-size: 400% 400%;
@@ -83,23 +83,29 @@
         }
 
         .btn {
-            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
-            border: 4px solid white;
+            background: radial-gradient(circle at top left, #FF8E53, #FF6B6B);
+            border: 4px solid rgba(255,255,255,0.9);
             color: white;
             font-size: clamp(1.2em, 4vw, 1.5em);
             font-weight: bold;
             padding: 20px 40px;
-            border-radius: 50px;
+            border-radius: 999px;
             cursor: pointer;
             text-transform: uppercase;
-            box-shadow: 0 8px 0 rgba(0,0,0,0.3);
-            transition: all 0.2s;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+            transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.3s ease;
             margin: 10px;
+            letter-spacing: 0.08em;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 30px rgba(0,0,0,0.8);
         }
 
         .btn:active {
-            transform: translateY(4px);
-            box-shadow: 0 4px 0 rgba(0,0,0,0.3);
+            transform: translateY(3px);
+            box-shadow: 0 5px 12px rgba(0,0,0,0.6);
         }
 
         .tutorial-step-container {
@@ -111,13 +117,14 @@
         }
 
         .tutorial-step {
-            background: rgba(255,255,255,0.1);
-            border: 4px solid white;
-            border-radius: 20px;
+            background: radial-gradient(circle at top, rgba(255,255,255,0.14), rgba(15,23,42,0.9));
+            border: 4px solid rgba(255,255,255,0.9);
+            border-radius: 24px;
             padding: 30px 20px;
             width: 100%;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(16px);
             text-align: center;
+            box-shadow: 0 18px 40px rgba(0,0,0,0.85);
         }
 
         .tutorial-step h2 {
@@ -149,13 +156,14 @@
         .settings-menu {
             width: 90%;
             max-width: 500px;
-            background: rgba(255,255,255,0.1);
-            border: 4px solid white;
-            border-radius: 20px;
+            background: radial-gradient(circle at top, rgba(255,255,255,0.12), rgba(15,23,42,0.92));
+            border: 4px solid rgba(255,255,255,0.9);
+            border-radius: 24px;
             padding: 20px;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(18px);
             max-height: 70vh;
             overflow-y: auto;
+            box-shadow: 0 18px 40px rgba(0,0,0,0.85);
         }
 
         .settings-section {
@@ -166,6 +174,8 @@
             font-size: clamp(1em, 3.5vw, 1.3em);
             font-weight: bold;
             margin-bottom: 10px;
+            letter-spacing: 0.08em;
+            opacity: 0.9;
         }
 
         .theme-grid {
@@ -177,22 +187,41 @@
 
         .theme-option {
             padding: 15px;
-            border: 3px solid white;
-            border-radius: 15px;
+            border: 3px solid rgba(255,255,255,0.9);
+            border-radius: 18px;
             cursor: pointer;
             text-align: center;
             font-weight: bold;
             font-size: clamp(0.9em, 3vw, 1.1em);
-            transition: all 0.3s;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, filter 0.25s ease, opacity 0.25s ease;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.75);
+            position: relative;
         }
 
         .theme-option:hover {
-            transform: scale(1.05);
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 12px 26px rgba(0,0,0,0.9);
         }
 
         .theme-option.active {
-            box-shadow: 0 0 20px rgba(255,255,255,0.5);
-            transform: scale(1.05);
+            box-shadow: 0 0 24px rgba(250,250,250,0.8);
+            transform: translateY(-1px) scale(1.05);
+            border-color: #FFD93D;
+        }
+
+        .theme-option.locked {
+            opacity: 0.3;
+            filter: grayscale(0.7);
+            cursor: not-allowed;
+        }
+
+        .theme-option.locked::after {
+            content: "🔒";
+            position: absolute;
+            top: 8px;
+            right: 10px;
+            font-size: 1.2em;
+            text-shadow: 0 0 8px rgba(0,0,0,0.8);
         }
 
         .top-controls {
@@ -207,18 +236,27 @@
         .control-icon {
             font-size: 1.8em;
             cursor: pointer;
-            background: rgba(255,255,255,0.2);
+            background: rgba(15,23,42,0.85);
             width: 50px;
             height: 50px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 3px solid white;
+            border: 3px solid rgba(255,255,255,0.9);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.85);
+            transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.25s ease;
+        }
+
+        .control-icon:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 12px 26px rgba(0,0,0,0.9);
         }
 
         .control-icon:active {
-            background: rgba(255,255,255,0.4);
+            background: rgba(30,64,175,0.9);
+            transform: translateY(2px);
+            box-shadow: 0 6px 14px rgba(0,0,0,0.8);
         }
 
         .game-container {
@@ -232,17 +270,18 @@
             font-size: clamp(2em, 7vw, 3em);
             font-weight: bold;
             margin: 20px 0;
-            text-shadow: 3px 3px 0 rgba(0,0,0,0.3);
+            text-shadow: 3px 3px 0 rgba(0,0,0,0.6);
         }
 
         .timer-bar {
             width: 100%;
             height: 40px;
-            background: rgba(255,255,255,0.3);
-            border: 4px solid white;
+            background: rgba(15,23,42,0.95);
+            border: 4px solid rgba(255,255,255,0.9);
             border-radius: 20px;
             overflow: hidden;
             margin: 20px 0;
+            box-shadow: 0 10px 24px rgba(0,0,0,0.8);
         }
 
         .timer-fill {
@@ -253,8 +292,8 @@
         }
 
         .action-display {
-            background: #667eea;
-            border: 5px solid white;
+            background: radial-gradient(circle at top, #1e293b, #020617);
+            border: 5px solid rgba(255,255,255,0.95);
             border-radius: 25px;
             padding: 30px 20px;
             margin: 30px 0;
@@ -263,13 +302,18 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 10px 0 rgba(0,0,0,0.2);
-            transition: background 0.3s ease;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+            transition: background 0.3s ease, transform 0.25s ease;
+        }
+
+        .action-display:hover {
+            transform: translateY(-2px);
         }
 
         .action-icon {
             font-size: clamp(5em, 20vw, 8em);
             margin: 15px 0;
+            text-shadow: 0 10px 24px rgba(0,0,0,0.9);
         }
 
         .action-icon.shake-animation {
@@ -291,7 +335,7 @@
         .action-text {
             font-size: clamp(2em, 8vw, 3.5em);
             font-weight: bold;
-            text-shadow: 3px 3px 0 rgba(0,0,0,0.3);
+            text-shadow: 3px 3px 0 rgba(0,0,0,0.7);
             text-align: center;
             word-wrap: break-word;
         }
@@ -311,7 +355,7 @@
             font-size: clamp(1.8em, 7vw, 3em);
             font-weight: bold;
             margin: 5px 0 3px 0;
-            text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+            text-shadow: 2px 2px 0 rgba(0,0,0,0.6);
             background: linear-gradient(45deg, #FF6B6B, #FFD93D);
             background-size: 200% 200%;
             -webkit-background-clip: text;
@@ -323,12 +367,12 @@
             font-size: clamp(1em, 3.5vw, 1.5em);
             font-weight: bold;
             margin: 3px 0;
-            text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+            text-shadow: 2px 2px 0 rgba(0,0,0,0.6);
         }
 
         .summary-stats {
-            background: rgba(255,255,255,0.2);
-            border: 2px solid white;
+            background: rgba(15,23,42,0.9);
+            border: 2px solid rgba(255,255,255,0.9);
             border-radius: 10px;
             padding: clamp(5px, 2vw, 8px);
             margin: 3px auto;
@@ -336,11 +380,12 @@
             max-width: 95%;
             width: 100%;
             box-sizing: border-box;
+            box-shadow: 0 14px 30px rgba(0,0,0,0.9);
         }
 
         .stat-row {
             background: linear-gradient(135deg, #4ECDC4, #556ECF);
-            border: 2px solid white;
+            border: 2px solid rgba(255,255,255,0.9);
             border-radius: 8px;
             padding: clamp(5px, 1.5vw, 8px);
             margin: 3px 0;
@@ -360,8 +405,8 @@
         }
 
         .highscore-list {
-            background: rgba(255,255,255,0.2);
-            border: 2px solid white;
+            background: rgba(15,23,42,0.9);
+            border: 2px solid rgba(255,255,255,0.9);
             border-radius: 10px;
             padding: clamp(5px, 2vw, 8px);
             margin: 3px auto;
@@ -369,6 +414,7 @@
             max-width: 95%;
             width: 100%;
             box-sizing: border-box;
+            box-shadow: 0 14px 30px rgba(0,0,0,0.9);
         }
 
         .highscore-list h2 {
@@ -378,7 +424,7 @@
 
         .highscore-item {
             background: linear-gradient(135deg, #FF6B6B, #FF8E53);
-            border: 2px solid white;
+            border: 2px solid rgba(255,255,255,0.95);
             border-radius: 8px;
             padding: clamp(5px, 1.5vw, 7px) clamp(8px, 2vw, 10px);
             margin: 3px 0;
@@ -388,6 +434,7 @@
             align-items: center;
             font-weight: bold;
             box-sizing: border-box;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.7);
         }
 
         .highscore-item.first {
@@ -399,7 +446,7 @@
         .initials-input {
             font-size: clamp(1em, 3.5vw, 1.3em);
             padding: 8px;
-            border: 2px solid white;
+            border: 2px solid rgba(255,255,255,0.9);
             border-radius: 10px;
             text-align: center;
             text-transform: uppercase;
@@ -407,7 +454,7 @@
             margin: 5px auto;
             font-weight: bold;
             background: rgba(255,255,255,0.9);
-            color: #667eea;
+            color: #111827;
         }
 
         #newHighScoreSection h2 {
@@ -417,7 +464,7 @@
 
         .share-btn {
             background: linear-gradient(135deg, #6BCF7F, #4ECDC4);
-            border: 2px solid white;
+            border: 2px solid rgba(255,255,255,0.9);
             color: white;
             font-size: clamp(0.8em, 3vw, 1em);
             font-weight: bold;
@@ -425,13 +472,14 @@
             border-radius: 25px;
             cursor: pointer;
             margin: 4px 3px;
-            box-shadow: 0 3px 0 rgba(0,0,0,0.3);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.75);
         }
 
         .countdown {
             font-size: clamp(4em, 15vw, 5em);
             font-weight: bold;
             animation: pulse 0.5s ease-in-out;
+            text-shadow: 0 8px 24px rgba(0,0,0,0.9);
         }
 
         .success-feedback {
@@ -459,7 +507,7 @@
 
         .swipe-hint {
             font-size: clamp(0.8em, 2.5vw, 0.9em);
-            opacity: 0.7;
+            opacity: 0.75;
             margin-top: 10px;
         }
     </style>
@@ -499,11 +547,11 @@
         <h1>SETTINGS</h1>
         <div class="settings-menu">
             <div class="settings-section">
-                <div class="settings-label">🎨 Choose Theme</div>
+                <div class="settings-label">🎨 CHOOSE THEME</div>
                 <div class="theme-grid" id="themeGrid"></div>
             </div>
             <div class="settings-section">
-                <div class="settings-label">📚 Tutorial</div>
+                <div class="settings-label">📚 TUTORIAL</div>
                 <button class="btn" onclick="showTutorial()">VIEW TUTORIAL</button>
             </div>
         </div>
@@ -523,6 +571,9 @@
             <div class="action-display">
                 <div class="action-icon" id="actionIcon">🎮</div>
                 <div class="action-text" id="actionText">GET READY!</div>
+            </div>
+            <div id="readyTutorialLink" class="swipe-hint" style="display: none;">
+                <a href="#" onclick="event.preventDefault(); showTutorial();" style="color: white; text-decoration: underline;">How to Play</a>
             </div>
         </div>
     </div>
@@ -546,7 +597,7 @@
                 </div>
             </div>
             <div id="newHighScoreSection" style="display: none;">
-                <h2 style="color: #FFD700; text-shadow: 2px 2px 0 rgba(0,0,0,0.3);">NEW HIGH SCORE!</h2>
+                <h2 style="color: #FFD700; text-shadow: 2px 2px 0 rgba(0,0,0,0.6);">NEW HIGH SCORE!</h2>
                 <input type="text" id="initialsInput" class="initials-input" maxlength="3" placeholder="AAA">
                 <button class="btn" onclick="saveHighScore()">SAVE</button>
             </div>
@@ -570,7 +621,7 @@
         let moveTimes = [];
         let moveHistory = [];
         let moveStartTime = 0;
-        let currentTheme = 'default';
+        let currentTheme = 'dark';
         let returnScreen = 'welcomeScreen';
 
         const themes = {
@@ -581,7 +632,7 @@
             },
             dark: {
                 name: 'Dark',
-                background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
+                background: 'linear-gradient(135deg, #0f172a 0%, #020617 100%)',
                 color: 'white'
             },
             sunset: {
@@ -605,6 +656,8 @@
                 color: 'white'
             }
         };
+
+        const themeOrder = ['dark', 'default', 'sunset', 'ocean', 'forest', 'neon'];
 
         const gestures = [
             { name: 'STRIKE A POSE', icon: '🤳', type: 'tilt', description: 'Lift phone up and tilt down like taking a selfie', color: '#9333ea' },
@@ -663,15 +716,19 @@
         }
 
         function loadTheme() {
-            const saved = localStorage.getItem('fidgetRushTheme');
-            if (saved && themes[saved]) {
-                currentTheme = saved;
+            const unlocked = getUnlockedThemeSet();
+            let saved = localStorage.getItem('fidgetRushTheme');
+            if (!saved || !themes[saved] || !unlocked.has(saved)) {
+                saved = 'dark';
+                localStorage.setItem('fidgetRushTheme', saved);
             }
+            currentTheme = saved;
             applyTheme(currentTheme);
         }
 
         function applyTheme(themeId) {
             const theme = themes[themeId];
+            if (!theme) return;
             document.body.style.background = theme.background;
             document.body.style.color = theme.color;
             currentTheme = themeId;
@@ -681,14 +738,31 @@
         function buildThemeGrid() {
             const grid = document.getElementById('themeGrid');
             grid.innerHTML = '';
+            const unlocked = getUnlockedThemeSet();
             
-            Object.keys(themes).forEach(themeId => {
+            themeOrder.forEach(themeId => {
                 const theme = themes[themeId];
+                if (!theme) return;
+
                 const option = document.createElement('div');
-                option.className = 'theme-option' + (themeId === currentTheme ? ' active' : '');
+                let classNames = 'theme-option';
+                const isUnlocked = unlocked.has(themeId);
+                if (!isUnlocked) {
+                    classNames += ' locked';
+                }
+                if (themeId === currentTheme && isUnlocked) {
+                    classNames += ' active';
+                }
+                option.className = classNames;
                 option.style.background = theme.background;
-                option.textContent = theme.name;
+                option.innerHTML = `
+                    <div>${theme.name}</div>
+                    ${!isUnlocked ? '<div style="margin-top:6px;font-size:0.75em;opacity:0.85;">Score up to unlock</div>' : ''}
+                `;
                 option.onclick = () => {
+                    if (!isUnlocked) {
+                        return;
+                    }
                     applyTheme(themeId);
                     buildThemeGrid();
                 };
@@ -758,17 +832,19 @@
         }
 
         function openSettings() {
-            returnScreen = document.querySelector('.screen.active').id;
-            gameActive = false;
-            gamePaused = false;
-            clearInterval(timerInterval);
+            const activeScreen = document.querySelector('.screen.active');
+            returnScreen = activeScreen ? activeScreen.id : 'welcomeScreen';
+            if (returnScreen === 'gameScreen') {
+                gamePaused = true;
+                clearInterval(timerInterval);
+            }
             buildThemeGrid();
             showScreen('settingsScreen');
         }
 
         function closeSettings() {
             showScreen(returnScreen);
-            if (returnScreen === 'gameScreen' && !tutorialMode) {
+            if (returnScreen === 'gameScreen' && !tutorialMode && gameActive) {
                 gamePaused = false;
                 startTimer();
             }
@@ -885,15 +961,16 @@
             actionIcon.style.display = 'block';
             actionIcon.textContent = '👋';
             actionIcon.className = 'action-icon pulse';
-            actionText.innerHTML = '<div style="cursor: pointer;">READY?</div><div style="margin-top: 10px; font-size: 0.7em; opacity: 0.7;"><a href="#" onclick="event.preventDefault(); showTutorial(); return false;" style="color: white; text-decoration: underline;">Tutorial</a></div>';
-            actionDisplay.style.background = '#667eea';
-            
-            const startCountdownOnTap = () => {
-                actionDisplay.removeEventListener('click', startCountdownOnTap);
-                countdown();
-            };
-            
-            actionDisplay.addEventListener('click', startCountdownOnTap);
+            actionText.textContent = 'READY?';
+            actionDisplay.style.background = 'radial-gradient(circle at top, #1e293b, #020617)';
+
+            const oldListener = actionDisplay.getAttribute('data-listener-attached');
+            if (!oldListener) {
+                actionDisplay.setAttribute('data-listener-attached', 'true');
+                actionDisplay.addEventListener('click', () => {
+                    countdown();
+                }, { once: true });
+            }
         }
 
         function initializeSensors() {
@@ -944,6 +1021,7 @@
                     resetSpinState();
                 }
             }
+
             const canTriggerTap = (now - motionData.lastTapTrigger) > motionData.tapDebounce;
 
             if ((tutorialMode || (gameActive && currentGesture && currentGesture.type === 'tilt'))) {
@@ -1036,49 +1114,83 @@
 
                 const isTilted = isPortrait && tiltFromBaseline > motionData.tiltThreshold;
 
-                if (isTilted && (tutorialMode || (gameActive && currentGesture && currentGesture.type === 'tilt'))) {
+                if ((tutorialMode || (gameActive && currentGesture && currentGesture.type === 'tilt')) && isTilted) {
                     if (motionData.tiltStartTime === 0) {
                         motionData.tiltStartTime = now;
-                    }
-                    const heldDuration = now - motionData.tiltStartTime;
-
-                    if (heldDuration >= motionData.tiltHoldDuration) {
-                        motionData.lastTiltTime = now;
-                        
-                        const timeSinceLift = now - motionData.lastLiftTime;
-                        const hasBothGestures = motionData.lastLiftTime > 0 && timeSinceLift <= motionData.selfieWindow;
-                        
-                        if (hasBothGestures) {
+                    } else {
+                        const tiltDuration = now - motionData.tiltStartTime;
+                        if (tiltDuration >= motionData.tiltHoldDuration) {
+                            motionData.lastTiltTime = now;
                             if (tutorialMode) {
                                 motionData.tiltStartTime = 0;
-                                motionData.lastLiftTime = 0;
-                                motionData.lastTiltTime = 0;
                                 handleTutorialSuccess('tilt');
                             } else if (gameActive && currentGesture && currentGesture.type === 'tilt') {
                                 motionData.tiltStartTime = 0;
-                                motionData.lastLiftTime = 0;
-                                motionData.lastTiltTime = 0;
                                 completeGesture();
                             }
                         }
                     }
                 } else {
                     motionData.tiltStartTime = 0;
-                    if (tutorialMode || (gameActive && currentGesture && currentGesture.type === 'tilt')) {
-                        motionData.lastTiltTime = 0;
+                }
+
+                let headingChange = 0;
+                if (motionData.lastRotation !== null && typeof alpha === 'number') {
+                    let diff = alpha - motionData.lastRotation;
+                    if (diff > 180) diff -= 360;
+                    if (diff < -180) diff += 360;
+                    headingChange = diff;
+                }
+                
+                if ((tutorialMode || (gameActive && currentGesture && currentGesture.type === 'spin')) && typeof alpha === 'number') {
+                    const nowSpin = now;
+                    
+                    if (!motionData.spinAttemptActive) {
+                        if (Math.abs(headingChange) > 10) {
+                            motionData.spinAttemptActive = true;
+                            motionData.spinStartTime = nowSpin;
+                            motionData.spinPeakAcceleration = 0;
+                            motionData.spinDirection = headingChange > 0 ? 1 : -1;
+                            motionData.spinDirectionChanges = 0;
+                        }
+                    } else {
+                        if (Math.sign(headingChange) !== motionData.spinDirection && Math.abs(headingChange) > 10) {
+                            motionData.spinDirectionChanges++;
+                            motionData.spinDirection = Math.sign(headingChange);
+                        }
+                        
+                        const elapsedSpin = nowSpin - motionData.spinStartTime;
+                        motionData.rotation += headingChange;
+
+                        const absRotation = Math.abs(motionData.rotation);
+
+                        if (
+                            absRotation >= motionData.rotationThreshold &&
+                            elapsedSpin >= motionData.spinMinTime &&
+                            elapsedSpin <= motionData.spinMaxTime &&
+                            motionData.spinDirectionChanges <= motionData.spinMaxDirectionChanges
+                        ) {
+                            if (tutorialMode) {
+                                resetSpinState();
+                                handleTutorialSuccess('spin');
+                            } else if (gameActive && currentGesture && currentGesture.type === 'spin') {
+                                resetSpinState();
+                                completeGesture();
+                            }
+                        } else if (elapsedSpin > motionData.spinMaxTime) {
+                            resetSpinState();
+                        }
                     }
                 }
-            }
 
-            if (gamma !== null) {
-                const gammaDelta = gamma - motionData.lastGamma;
-                
-                if (Math.abs(gammaDelta) > 20) {
-                    const currentDirection = gammaDelta > 0 ? 1 : -1;
-                    if (motionData.lastWaveDirection !== 0 && currentDirection !== motionData.lastWaveDirection) {
+                motionData.lastRotation = typeof alpha === 'number' ? alpha : motionData.lastRotation;
+
+                const waveDirection = gamma > motionData.lastGamma ? 1 : (gamma < motionData.lastGamma ? -1 : 0);
+                if (Math.abs(gamma - motionData.lastGamma) > 5) {
+                    if (motionData.lastWaveDirection !== 0 && waveDirection !== 0 && waveDirection !== motionData.lastWaveDirection) {
                         motionData.waveOscillations++;
                     }
-                    motionData.lastWaveDirection = currentDirection;
+                    motionData.lastWaveDirection = waveDirection;
                 }
                 motionData.lastGamma = gamma;
 
@@ -1092,274 +1204,256 @@
                     }
                 }
             }
-
-            if (alpha !== null) {
-                const now = Date.now();
-                const signedDelta = alpha - motionData.lastRotation;
-                let normalizedDelta = signedDelta;
-                if (signedDelta > 180) {
-                    normalizedDelta = signedDelta - 360;
-                } else if (signedDelta < -180) {
-                    normalizedDelta = signedDelta + 360;
-                }
-                
-                const rotationDelta = Math.abs(normalizedDelta);
-                
-                if ((tutorialMode || (gameActive && currentGesture && currentGesture.type === 'spin'))) {
-                    if (rotationDelta > 2) {
-                        if (!motionData.spinAttemptActive) {
-                            motionData.spinAttemptActive = true;
-                            motionData.spinStartTime = now;
-                            motionData.spinPeakAcceleration = 0;
-                        }
-                        
-                        const currentDirection = normalizedDelta > 0 ? 1 : -1;
-                        if (motionData.spinDirection !== 0 && currentDirection !== motionData.spinDirection) {
-                            motionData.spinDirectionChanges++;
-                            if (motionData.spinDirectionChanges > motionData.spinMaxDirectionChanges) {
-                                resetSpinState();
-                                motionData.lastRotation = alpha;
-                                return;
-                            }
-                        }
-                        motionData.spinDirection = currentDirection;
-                        motionData.rotation += rotationDelta;
-                    }
-                    motionData.lastRotation = alpha;
-                    
-                    if (motionData.rotation >= motionData.rotationThreshold && motionData.spinAttemptActive) {
-                        const spinDuration = now - motionData.spinStartTime;
-                        
-                        if (spinDuration >= motionData.spinMinTime && 
-                            spinDuration <= motionData.spinMaxTime && 
-                            motionData.spinPeakAcceleration <= motionData.spinAccelerationThreshold) {
-                            
-                            if (tutorialMode) {
-                                resetSpinState();
-                                handleTutorialSuccess('spin');
-                            } else if (gameActive && currentGesture.type === 'spin') {
-                                resetSpinState();
-                                completeGesture();
-                            }
-                        } else {
-                            resetSpinState();
-                        }
-                    }
-                } else {
-                    motionData.rotation += rotationDelta;
-                    motionData.lastRotation = alpha;
-                }
-            }
         }
 
-        function handleTutorialSuccess(gestureType) {
-            const gestureIndex = gestures.findIndex(g => g.type === gestureType);
-            if (gestureIndex === -1 || gestureCompleted[gestureIndex]) return;
+        function getUnlockedThemeSet() {
+            const bestScore = getBestScore();
+            const unlocked = new Set();
             
-            gestureCompleted[gestureIndex] = true;
-            updateGestureStatus(gestureIndex, '✅');
-            showSuccessFeedback();
-            resetGestureTracking();
-            
-            if (gestureIndex === currentTutorialStep && currentTutorialStep < gestures.length - 1) {
-                setTimeout(() => {
-                    currentTutorialStep++;
-                    updateTutorialStep();
-                }, 1000);
-            }
+            unlocked.add('dark');
+
+            if (bestScore >= 10) unlocked.add('default');
+            if (bestScore >= 20) unlocked.add('sunset');
+            if (bestScore >= 30) unlocked.add('ocean');
+            if (bestScore >= 50) unlocked.add('forest');
+            if (bestScore >= 75) unlocked.add('neon');
+
+            return unlocked;
         }
 
         function countdown() {
+            gameActive = false;
             let count = 3;
             const actionIcon = document.getElementById('actionIcon');
             const actionText = document.getElementById('actionText');
+            const actionDisplay = document.querySelector('.action-display');
             
             actionIcon.style.display = 'none';
-            actionText.innerHTML = `<div class="countdown">${count}</div>`;
-            
-            const countInterval = setInterval(() => {
-                count--;
+            actionText.classList.add('countdown');
+            actionDisplay.style.background = 'radial-gradient(circle at top, #020617, #111827)';
+
+            const interval = setInterval(() => {
                 if (count > 0) {
-                    actionText.innerHTML = `<div class="countdown">${count}</div>`;
+                    actionText.textContent = count;
+                    count--;
                 } else {
-                    clearInterval(countInterval);
-                    actionIcon.style.display = 'block';
-                    nextGesture();
+                    clearInterval(interval);
+                    actionText.classList.remove('countdown');
+                    gameActive = true;
+                    nextAction();
                 }
-            }, 1000);
+            }, 600);
         }
 
-        function nextGesture() {
-            gameActive = true;
+        function nextAction() {
+            if (!gameActive) return;
+            
+            resetGestureTracking();
             currentGesture = gestures[Math.floor(Math.random() * gestures.length)];
-            motionData.rotation = 0;
-            motionData.waveOscillations = 0;
-            motionData.lastWaveDirection = 0;
-            motionData.shakeDirectionChanges = 0;
-            resetSpinState();
-            moveStartTime = Date.now();
             
             const actionIcon = document.getElementById('actionIcon');
             const actionText = document.getElementById('actionText');
             const actionDisplay = document.querySelector('.action-display');
             
-            actionText.textContent = currentGesture.name;
             actionIcon.textContent = currentGesture.icon;
-            actionDisplay.style.background = currentGesture.color;
+            actionText.textContent = currentGesture.name;
             
-            actionIcon.className = 'action-icon';
-            if (currentGesture.type === 'shake') {
-                actionIcon.classList.add('shake-animation');
-            } else if (currentGesture.type === 'spin') {
-                actionIcon.classList.add('spin-animation');
-            } else {
-                actionIcon.classList.add('default-animation');
+            let bgColor;
+            switch (currentGesture.type) {
+                case 'shake':
+                    bgColor = 'radial-gradient(circle at top, #7f1d1d, #450a0a)';
+                    actionIcon.className = 'action-icon shake-animation';
+                    break;
+                case 'spin':
+                    bgColor = 'radial-gradient(circle at top, #0f172a, #1e293b)';
+                    actionIcon.className = 'action-icon spin-animation';
+                    break;
+                case 'tilt':
+                    bgColor = 'radial-gradient(circle at top, #312e81, #1e3a8a)';
+                    actionIcon.className = 'action-icon default-animation';
+                    break;
+                case 'fish':
+                    bgColor = 'radial-gradient(circle at top, #064e3b, #022c22)';
+                    actionIcon.className = 'action-icon default-animation';
+                    break;
+                case 'wave':
+                    bgColor = 'radial-gradient(circle at top, #7c2d12, #431407)';
+                    actionIcon.className = 'action-icon default-animation';
+                    break;
+                default:
+                    bgColor = 'radial-gradient(circle at top, #1e293b, #020617)';
+                    actionIcon.className = 'action-icon default-animation';
             }
             
+            actionDisplay.style.background = bgColor;
+            moveStartTime = Date.now();
             startTimer();
         }
 
         function startTimer() {
-            if (gamePaused) return;
-            
+            clearInterval(timerInterval);
             const timerFill = document.getElementById('timerFill');
-            const startWidth = 100;
-            let currentWidth = startWidth;
-            const decreaseRate = 100 / (timeLimit / 50);
+            const startTime = Date.now();
             
-            timerFill.style.width = '100%';
-            
-            if (timerInterval) clearInterval(timerInterval);
-            
-            timerInterval = setInterval(() => {
-                if (gamePaused) return;
-                
-                currentWidth -= decreaseRate;
-                timerFill.style.width = currentWidth + '%';
-                
-                if (currentWidth <= 0) {
+            function updateTimer() {
+                if (!gameActive || gamePaused) {
                     clearInterval(timerInterval);
-                    gameOver();
+                    return;
                 }
-            }, 50);
+                
+                const elapsed = Date.now() - startTime;
+                const remaining = Math.max(0, timeLimit - elapsed);
+                const progress = (remaining / timeLimit) * 100;
+                timerFill.style.width = progress + '%';
+                
+                if (remaining <= 0) {
+                    clearInterval(timerInterval);
+                    endGame();
+                }
+            }
+            
+            updateTimer();
+            timerInterval = setInterval(updateTimer, 50);
+        }
+
+        function handleTutorialSuccess(gestureType) {
+            const index = gestures.findIndex(g => g.type === gestureType);
+            if (index !== -1) {
+                gestureCompleted[index] = true;
+                updateGestureStatus(index, '✅');
+            }
         }
 
         function completeGesture() {
-            if (!gameActive || gamePaused) return;
-            
-            gameActive = false;
-            clearInterval(timerInterval);
-            
-            const moveTime = Date.now() - moveStartTime;
-            moveTimes.push(moveTime);
-            moveHistory.push({ name: currentGesture.name, time: moveTime });
-            
+            if (!gameActive) return;
+
+            const reactionTime = Date.now() - moveStartTime;
+            moveTimes.push(reactionTime);
+            moveHistory.push({
+                gesture: currentGesture.name,
+                type: currentGesture.type,
+                time: reactionTime
+            });
+
             score++;
             document.getElementById('currentScore').textContent = score;
-            
-            showSuccessFeedback();
-            
-            timeLimit = Math.max(800, timeLimit - 150);
-            
-            setTimeout(() => {
-                nextGesture();
-            }, 300);
-        }
 
-        function showSuccessFeedback() {
             const feedback = document.createElement('div');
             feedback.className = 'success-feedback';
-            feedback.textContent = '✓';
-            feedback.style.color = '#6BCF7F';
+            feedback.textContent = '⭐';
             document.body.appendChild(feedback);
+            setTimeout(() => feedback.remove(), 500);
+
+            if (score % 5 === 0 && timeLimit > 1000) {
+                timeLimit -= 200;
+            }
             
-            setTimeout(() => {
-                document.body.removeChild(feedback);
-            }, 500);
+            nextAction();
         }
 
-        function gameOver() {
+        function endGame() {
             gameActive = false;
-            gamePaused = false;
+            removeSensors();
             clearInterval(timerInterval);
-            
-            document.getElementById('finalScore').textContent = score;
-            
-            if (moveHistory.length > 0) {
-                const fastestMove = moveHistory.reduce((prev, curr) => prev.time < curr.time ? prev : curr);
-                const slowestMove = moveHistory.reduce((prev, curr) => prev.time > curr.time ? prev : curr);
-                document.getElementById('fastestMove').textContent = `${fastestMove.name} - ${(fastestMove.time / 1000).toFixed(2)}s`;
-                document.getElementById('slowestMove').textContent = `${slowestMove.name} - ${(slowestMove.time / 1000).toFixed(2)}s`;
+            updateSummary();
+            showScreen('summaryScreen');
+        }
+
+        function updateSummary() {
+            const finalScore = document.getElementById('finalScore');
+            finalScore.textContent = score.toString();
+
+            if (moveTimes.length > 0) {
+                const fastest = Math.min(...moveTimes);
+                const slowest = Math.max(...moveTimes);
+                document.getElementById('fastestMove').textContent = `${fastest} ms`;
+                document.getElementById('slowestMove').textContent = `${slowest} ms`;
             } else {
                 document.getElementById('fastestMove').textContent = '-';
                 document.getElementById('slowestMove').textContent = '-';
             }
-            
-            checkHighScore();
-            displayHighScores();
-            showScreen('summaryScreen');
-        }
 
-        function checkHighScore() {
-            const highScores = getHighScores();
-            const isHighScore = highScores.length < 5 || score > highScores[highScores.length - 1].score;
-            
-            if (isHighScore) {
-                document.getElementById('newHighScoreSection').style.display = 'block';
-                document.getElementById('initialsInput').value = '';
-                document.getElementById('initialsInput').focus();
+            const bestScore = getBestScore();
+            if (score > bestScore) {
+                showNewHighScorePrompt();
             } else {
                 document.getElementById('newHighScoreSection').style.display = 'none';
             }
+
+            displayHighScores();
         }
 
-        function getHighScores() {
-            const stored = localStorage.getItem('fidgetRushHighScores');
-            return stored ? JSON.parse(stored) : [];
+        function getBestScore() {
+            const highScores = JSON.parse(localStorage.getItem('fidgetRushHighScores') || '[]');
+            if (highScores.length === 0) return 0;
+            return Math.max(...highScores.map(s => s.score));
+        }
+
+        function showNewHighScorePrompt() {
+            document.getElementById('newHighScoreSection').style.display = 'block';
+            const initialsInput = document.getElementById('initialsInput');
+            if (initialsInput) {
+                initialsInput.value = '';
+                initialsInput.focus();
+            }
         }
 
         function saveHighScore() {
-            const initials = document.getElementById('initialsInput').value.toUpperCase().trim();
-            if (initials.length !== 3) {
-                alert('Please enter exactly 3 letters for your initials!');
-                return;
-            }
-            
-            let highScores = getHighScores();
-            highScores.push({ initials, score });
+            const initialsInput = document.getElementById('initialsInput');
+            const initials = (initialsInput.value || '').toUpperCase().trim().slice(0, 3) || 'AAA';
+
+            const newEntry = {
+                initials,
+                score,
+                date: new Date().toISOString()
+            };
+
+            const highScores = JSON.parse(localStorage.getItem('fidgetRushHighScores') || '[]');
+            highScores.push(newEntry);
             highScores.sort((a, b) => b.score - a.score);
-            highScores = highScores.slice(0, 5);
-            
-            localStorage.setItem('fidgetRushHighScores', JSON.stringify(highScores));
-            
+            const truncated = highScores.slice(0, 10);
+            localStorage.setItem('fidgetRushHighScores', JSON.stringify(truncated));
+
             document.getElementById('newHighScoreSection').style.display = 'none';
             displayHighScores();
         }
 
         function displayHighScores() {
-            const highScores = getHighScores();
-            const listContainer = document.getElementById('highScoreList');
+            const container = document.getElementById('highScoreList');
+            const highScores = JSON.parse(localStorage.getItem('fidgetRushHighScores') || '[]');
+            const best = highScores.map(s => s.score)[0] || 0;
             
-            listContainer.innerHTML = '<h2>HIGH SCORES</h2>';
-            
+            container.innerHTML = '<h2>HIGH SCORES</h2>';
+
             if (highScores.length === 0) {
-                listContainer.innerHTML += '<p style="opacity: 0.7; margin: 20px;">No high scores yet!</p>';
+                const empty = document.createElement('div');
+                empty.textContent = 'No scores yet. Play a game to set the first record!';
+                empty.style.fontSize = 'clamp(0.8em, 2.5vw, 1em)';
+                empty.style.marginTop = '5px';
+                empty.style.opacity = '0.8';
+                container.appendChild(empty);
                 return;
             }
-            
-            highScores.forEach((hs, index) => {
-                const item = document.createElement('div');
-                item.className = 'highscore-item' + (index === 0 ? ' first' : '');
-                item.innerHTML = `<span>${index + 1}. ${hs.initials}</span><span>${hs.score}</span>`;
-                listContainer.appendChild(item);
+
+            highScores.forEach((entry, index) => {
+                const div = document.createElement('div');
+                div.className = 'highscore-item';
+                if (index === 0) {
+                    div.classList.add('first');
+                }
+                const date = new Date(entry.date);
+                const dateStr = date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+                div.textContent = `${index + 1}. ${entry.initials} — ${entry.score} pts (${dateStr})`;
+                container.appendChild(div);
             });
         }
 
         function shareScore() {
+            const text = `I just scored ${score} points in Fidget Rush! Can you beat me?`;
             if (navigator.share) {
                 navigator.share({
-                    title: 'Fidget Rush Score',
-                    text: `I scored ${score} points in Fidget Rush! Can you beat it?`,
+                    title: 'Fidget Rush High Score',
+                    text,
                     url: window.location.href
                 }).catch(err => console.log('Share cancelled'));
             } else {
